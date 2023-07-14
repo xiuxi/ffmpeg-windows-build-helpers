@@ -1,0 +1,48 @@
+https://yangcha.github.io/FFmpeg-Win64/
+
+
+在 Docker 容器中构建 FFmpeg Windows 版本
+30年2017月<>日星期六
+如果你想编译FFmpeg Windows版本，你可能会发现这不是一件容易的事。感谢 Roger Pack 的交钥匙脚本，使这项任务变得更加容易：ffmpeg-windows-build-helpers
+
+在这里，我将这个脚本包装到一个 dockerfile 中，所以如果你想自己构建，它不会破坏你当前的系统。要构建它，请将以下文件保存到名为 的文件中，然后运行命令Dockerfile
+
+docker build .
+该文件 ：Dockerfile
+
+FROM ubuntu:16.04
+LABEL maintainer "Changjiang Yang"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        subversion \
+        curl \
+        texinfo \
+        g++ \
+        bison \
+        flex \
+        cvs \
+        yasm \
+        automake \
+        libtool \
+        autoconf \
+        gcc \
+        cmake \
+        git \
+        make \
+        pkg-config \
+        zlib1g-dev \
+        mercurial \
+        unzip \
+        pax \
+        nasm \
+        gperf \
+        autogen \
+        bzip2 \
+        p7zip-full \
+        wget \
+        ca-certificates \
+        ed
+
+RUN git clone https://github.com/rdp/ffmpeg-windows-build-helpers.git && \
+        cd ffmpeg-windows-build-helpers && \
+        ./cross_compile_ffmpeg.sh --compiler-flavors=win64
